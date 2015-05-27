@@ -11,7 +11,7 @@ namespace RGolemAddin.Config
         static string connectionString =
                                 "User=SYSDBA;" +
                                 "Password=masterkey;" +
-                                "Database=golem_data;" +
+                                "Database=golem_data_develop;" +
                                 "DataSource=192.168.5.70;" +
                                 "Port=3050";
 

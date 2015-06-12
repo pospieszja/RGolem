@@ -44,6 +44,25 @@ namespace RGolemAddin.View
             numQuanSV6.Value = quantity;
             numQuanSV7.Value = quantity;
             numQuanSV8.Value = quantity;
+
+            //domyślna wartość OCP
+            numOcpSV4.Value = 1;
+            numOcpSV1.Value = 1;
+            numOcpSV2.Value = 1;
+            numOcpSV5.Value = 1;
+            numOcpSV6.Value = 1;
+            numOcpSV7.Value = 1;
+            numOcpSV8.Value = 1;
+
+            //domyslna wartość OCU
+            numOcuSV4.Value = 15;
+            numOcuSV1.Value = 15;
+            numOcuSV2.Value = 15;
+            numOcuSV5.Value = 5;
+            numOcuSV6.Value = 15;
+            numOcuSV7.Value = 15;
+            numOcuSV8.Value = 15;
+
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -75,7 +94,6 @@ namespace RGolemAddin.View
             svDict.Add(7, "L2");
             //Robot Linia 4
             svDict.Add(8, "L4");
-
 
             using (FbConnection connection = new FbConnection(DataBaseConnection.GetConnectionString()))
             {
@@ -153,8 +171,7 @@ namespace RGolemAddin.View
 
                     if (quantity > 0)
                     {
-                        command.CommandText = @"INSERT INTO KOLEJKAZ (SV, PRODUKT, ZLECENIE, ILE_Z, OCC, OC_P, OC_U, NAZWAKZ)
-                                                    VALUES(@sv, @materialNo, @orderSV, @quantity, @occ, @ocp, @ocu, @materialDesc)";
+                        command.CommandText = @"INSERT INTO KOLEJKAZ (SV, PRODUKT, ZLECENIE, ILE_Z, OCC, OC_P, OC_U, NAZWAKZ, ZORDER, ZEND, ZHIDE) VALUES (@sv, @materialNo, @orderSV, @quantity, @occ, @ocp, @ocu, @materialDesc, 0, 0, 0);";
                         command.Parameters[0].Value = item.Key;
                         command.Parameters[1].Value = materialNo;
                         command.Parameters[2].Value = orderSV;

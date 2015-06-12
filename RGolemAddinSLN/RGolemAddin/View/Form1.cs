@@ -122,19 +122,61 @@ namespace RGolemAddin.View
                 connection.Close();
             }
 
-            Excel.Sheets worksheets = (Excel.Sheets)(Globals.ThisAddIn.Application.Worksheets);
-            Excel.Worksheet newWorksheet = worksheets.Add();
+            string sheetName = "";
+            switch (Convert.ToInt32(cbxListMachine.SelectedValue))
+            {
+                case 3:
+                    sheetName = "Rozwijarka";
+                    break;
+                case 4:
+                    sheetName = "Cięcie";
+                    break;
+                case 1:
+                    sheetName = "Prasa duża";
+                    break;
+                case 2:
+                    sheetName = "Prasa mała";
+                    break;
+                case 5:
+                    sheetName = "Spawarka";
+                    break;
+                case 6:
+                    sheetName = "Robot 1";
+                    break;
+                case 7:
+                    sheetName = "Robot 2";
+                    break;
+                case 8:
+                    sheetName = "Robot 3";
+                    break;
+                case 9:
+                    sheetName = "Szlifierka";
+                    break;
+                default:
+                    break;
+            }
 
+            Excel.Sheets worksheets = (Excel.Sheets)(Globals.ThisAddIn.Application.Worksheets);
+
+            bool founded = false;
             foreach (Excel.Worksheet item in worksheets)
             {
-                if (item != newWorksheet)
+                if (item.Name == sheetName)
                 {
-                    item.Delete();
+                    item.Activate();
+                    founded = true;
                 }
             }
 
+            if (!founded)
+            {
+                MessageBox.Show("Nie znaleziono arkusza o nazwie: " + sheetName);
+                return;
+            }
 
             Excel.Worksheet activeWorksheet = ((Excel.Worksheet)Globals.ThisAddIn.Application.ActiveSheet);
+            activeWorksheet.get_Range("A:U").Clear();
+            activeWorksheet.get_Range("A:U").ClearContents();
 
             /*
              * Projekt layoutu ->
@@ -329,7 +371,7 @@ namespace RGolemAddin.View
 
                 connection.Close();
             }
-            
+
             int j = 3;
             foreach (DataRow row in dt.Rows)
             {
@@ -353,7 +395,10 @@ namespace RGolemAddin.View
                         ((Excel.Range)activeWorksheet.Cells[rowIndex + 1, j]).Value2 = Math.Round(Convert.ToDouble(row2["SUM_D_SR"]) / 60, 2);
                         if (Convert.ToInt32(row2["SUM_C_SR"]) > 0)
                         {
-                            ((Excel.Range)activeWorksheet.Cells[rowIndex + 2, j]).Value2 = ((Convert.ToDouble(row2["SUM_D_SR"]) / 60) / (Convert.ToDouble(row["ST_R_T"]) * Convert.ToDouble(row2["SUM_C_SR"])) - 1);
+                            if (Convert.ToDouble(row["ST_R_T"]) > 0)
+                            {
+                                ((Excel.Range)activeWorksheet.Cells[rowIndex + 2, j]).Value2 = ((Convert.ToDouble(row2["SUM_D_SR"]) / 60) / (Convert.ToDouble(row["ST_R_T"]) * Convert.ToDouble(row2["SUM_C_SR"])) - 1);
+                            }
                             ((Excel.Range)activeWorksheet.Cells[rowIndex + 3, j]).Value2 = ((Convert.ToDouble(row2["SUM_D_SR"]) / 60) - (Convert.ToDouble(row["ST_R_T"]) * Convert.ToDouble(row2["SUM_C_SR"])));
 
                             ((Excel.Range)activeWorksheet.Cells[rowIndex + 2, j]).NumberFormat = "0.00%";
@@ -424,8 +469,14 @@ namespace RGolemAddin.View
                         ((Excel.Range)activeWorksheet.Cells[rowIndex + 1, j]).Value2 = Math.Round(Convert.ToDouble(row2["SUM_D_SR"]) / 60, 2);
                         if (Convert.ToInt32(row2["SUM_C_SR"]) > 0)
                         {
-                            ((Excel.Range)activeWorksheet.Cells[rowIndex + 2, j]).Value2 = ((Convert.ToDouble(row2["SUM_D_SR"]) / 60) / (Convert.ToDouble(row["ST_R_T"]) * Convert.ToDouble(row2["SUM_C_SR"])) - 1);
-                            ((Excel.Range)activeWorksheet.Cells[rowIndex + 3, j]).Value2 = ((Convert.ToDouble(row2["SUM_D_SR"]) / 60) - (Convert.ToDouble(row["ST_R_T"]) * Convert.ToDouble(row2["SUM_C_SR"])));
+                            if (Convert.ToDouble(row2["SUM_D_SR"]) > 0)
+                            {
+                                if (Convert.ToDouble(row["ST_R_T"]) > 0)
+                                {
+                                    ((Excel.Range)activeWorksheet.Cells[rowIndex + 2, j]).Value2 = ((Convert.ToDouble(row2["SUM_D_SR"]) / 60) / (Convert.ToDouble(row["ST_R_T"]) * Convert.ToDouble(row2["SUM_C_SR"])) - 1);
+                                }
+                                ((Excel.Range)activeWorksheet.Cells[rowIndex + 3, j]).Value2 = ((Convert.ToDouble(row2["SUM_D_SR"]) / 60) - (Convert.ToDouble(row["ST_R_T"]) * Convert.ToDouble(row2["SUM_C_SR"])));
+                            }
 
                             ((Excel.Range)activeWorksheet.Cells[rowIndex + 2, j]).NumberFormat = "0.00%";
                             ((Excel.Range)activeWorksheet.Cells[rowIndex + 3, j]).NumberFormat = "0.00";
@@ -494,8 +545,14 @@ namespace RGolemAddin.View
                         ((Excel.Range)activeWorksheet.Cells[rowIndex + 1, j]).Value2 = Math.Round(Convert.ToDouble(row2["SUM_D_SR"]) / 60, 2);
                         if (Convert.ToInt32(row2["SUM_C_SR"]) > 0)
                         {
-                            ((Excel.Range)activeWorksheet.Cells[rowIndex + 2, j]).Value2 = ((Convert.ToDouble(row2["SUM_D_SR"]) / 60) / (Convert.ToDouble(row["ST_R_T"]) * Convert.ToDouble(row2["SUM_C_SR"])) - 1);
-                            ((Excel.Range)activeWorksheet.Cells[rowIndex + 3, j]).Value2 = ((Convert.ToDouble(row2["SUM_D_SR"]) / 60) - (Convert.ToDouble(row["ST_R_T"]) * Convert.ToDouble(row2["SUM_C_SR"])));
+                            if (Convert.ToDouble(row2["SUM_D_SR"]) > 0)
+                            {
+                                if (Convert.ToDouble(row["ST_R_T"]) > 0)
+                                {
+                                    ((Excel.Range)activeWorksheet.Cells[rowIndex + 2, j]).Value2 = ((Convert.ToDouble(row2["SUM_D_SR"]) / 60) / (Convert.ToDouble(row["ST_R_T"]) * Convert.ToDouble(row2["SUM_C_SR"])) - 1);
+                                }
+                                ((Excel.Range)activeWorksheet.Cells[rowIndex + 3, j]).Value2 = ((Convert.ToDouble(row2["SUM_D_SR"]) / 60) - (Convert.ToDouble(row["ST_R_T"]) * Convert.ToDouble(row2["SUM_C_SR"])));
+                            }
 
                             ((Excel.Range)activeWorksheet.Cells[rowIndex + 2, j]).NumberFormat = "0.00%";
                             ((Excel.Range)activeWorksheet.Cells[rowIndex + 3, j]).NumberFormat = "0.00";
@@ -540,7 +597,7 @@ namespace RGolemAddin.View
                 connection.Close();
             }
 
-            
+
             j = 3;
             foreach (DataRow row in dt.Rows)
             {
@@ -564,8 +621,14 @@ namespace RGolemAddin.View
                         ((Excel.Range)activeWorksheet.Cells[rowIndex + 1, j]).Value2 = Math.Round(Convert.ToDouble(row2["SUM_D_SR"]) / 60, 2);
                         if (Convert.ToInt32(row2["SUM_C_SR"]) > 0)
                         {
-                            ((Excel.Range)activeWorksheet.Cells[rowIndex + 2, j]).Value2 = ((Convert.ToDouble(row2["SUM_D_SR"]) / 60) / (Convert.ToDouble(row["ST_R_T"]) * Convert.ToDouble(row2["SUM_C_SR"])) - 1);
-                            ((Excel.Range)activeWorksheet.Cells[rowIndex + 3, j]).Value2 = ((Convert.ToDouble(row2["SUM_D_SR"]) / 60) - (Convert.ToDouble(row["ST_R_T"]) * Convert.ToDouble(row2["SUM_C_SR"])));
+                            if (Convert.ToDouble(row2["SUM_D_SR"]) > 0)
+                            {
+                                if (Convert.ToDouble(row["ST_R_T"]) > 0)
+                                {
+                                    ((Excel.Range)activeWorksheet.Cells[rowIndex + 2, j]).Value2 = ((Convert.ToDouble(row2["SUM_D_SR"]) / 60) / (Convert.ToDouble(row["ST_R_T"]) * Convert.ToDouble(row2["SUM_C_SR"])) - 1);
+                                }
+                                ((Excel.Range)activeWorksheet.Cells[rowIndex + 3, j]).Value2 = ((Convert.ToDouble(row2["SUM_D_SR"]) / 60) - (Convert.ToDouble(row["ST_R_T"]) * Convert.ToDouble(row2["SUM_C_SR"])));
+                            }
 
                             ((Excel.Range)activeWorksheet.Cells[rowIndex + 2, j]).NumberFormat = "0.00%";
                             ((Excel.Range)activeWorksheet.Cells[rowIndex + 3, j]).NumberFormat = "0.00";

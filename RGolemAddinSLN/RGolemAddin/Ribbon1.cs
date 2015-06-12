@@ -70,11 +70,25 @@ namespace RGolemAddin
             if (workbookName == "zlecenie_prod_soutec_planGhant.xlsm" && worksheetName == "zlecenia do realizacji" && activeCell.Column == 5)
             {
                 var form = new Form2();
-                form.ShowDialog();
+                form.Show();
             }
             else
             {
                 MessageBox.Show("Akcja niemożliwa do wykonania: nieprawidłowy arkusz lub zeszyt");
+            }
+        }
+
+        private void button4_Click(object sender, RibbonControlEventArgs e)
+        {
+            string worksheetName = Globals.ThisAddIn.Application.ActiveSheet.Name;
+            if (worksheetName == "dane zbiorcze")
+            {
+                var form = new Form3();
+                form.Show();
+            }
+            else
+            {
+                MessageBox.Show("Raport można wykonać tylko w arkuszu 'dane zbiorcze'");
             }
         }
     }

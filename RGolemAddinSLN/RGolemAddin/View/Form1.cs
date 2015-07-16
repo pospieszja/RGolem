@@ -46,12 +46,15 @@ namespace RGolemAddin.View
                 transaction = connection.BeginTransaction();
                 command.Transaction = transaction;
                 command.Connection = connection;
-                command.CommandText = @"select sv, maszyna from maszyny";
+                command.CommandText = @"select sv, maszyna from maszyny where sv in (1,2,4,5,6,7,8)";
                 FbDataAdapter adapter = new FbDataAdapter(command);
                 adapter.Fill(dt);
 
                 connection.Close();
             }
+
+            // Dodanie pozycji 0 jako wszystkie
+            dict.Add(0, "wszystkie");
 
             foreach (DataRow row in dt.Rows)
             {
@@ -64,6 +67,28 @@ namespace RGolemAddin.View
         }
 
         private void button1_Click(object sender, EventArgs e)
+        {
+            int choosenSV;
+
+            choosenSV = Convert.ToInt32(cbxListMachine.SelectedValue);
+            var machineList = new int[] { 4, 1, 2, 5, 6, 7, 8 };
+
+            // 0 - generuje wynik dla wszystkich maszyn
+            // W pozostałych przypadkach generuje wynik dla wybranej maszyny
+            if (choosenSV == 0)
+            {
+                foreach (var svNumber in machineList)
+                {
+                    generateResultBySV(svNumber);
+                }
+            }
+            else
+            {
+                generateResultBySV(choosenSV);
+            }
+        }
+
+        private void generateResultBySV(int svNumber)
         {
             FbTransaction transaction;
             FbCommand command = new FbCommand();
@@ -88,7 +113,7 @@ namespace RGolemAddin.View
                 command.Connection = connection;
 
                 paramMachine.ParameterName = "@sv";
-                paramMachine.Value = cbxListMachine.SelectedValue;
+                paramMachine.Value = svNumber;
                 command.Parameters.Add(paramMachine);
 
                 paramDateFrom.ParameterName = "@czasOd";
@@ -123,7 +148,7 @@ namespace RGolemAddin.View
             }
 
             string sheetName = "";
-            switch (Convert.ToInt32(cbxListMachine.SelectedValue))
+            switch (svNumber)
             {
                 case 3:
                     sheetName = "Rozwijarka";
@@ -187,7 +212,7 @@ namespace RGolemAddin.View
             activeWorksheet.get_Range("A1", "H1").Merge();
             activeWorksheet.get_Range("A1", "H1").Font.Bold = true;
             activeWorksheet.get_Range("A1", "H1").Font.Size = 14;
-            activeWorksheet.get_Range("A1").Value2 = "Raport zbiorczy dla maszyny: " + cbxListMachine.SelectedItem + " za okres: " + dateFrom.ToString("yyyy-MM-dd HH:mm") + " - " + dateTo.ToString("yyyy-MM-dd HH:mm");
+            activeWorksheet.get_Range("A1").Value2 = "Raport zbiorczy dla maszyny: " + sheetName + " za okres: " + dateFrom.ToString("yyyy-MM-dd HH:mm") + " - " + dateTo.ToString("yyyy-MM-dd HH:mm");
 
             //Podsumowanie
             activeWorksheet.get_Range("A2", "O100").Font.Size = 9;
@@ -510,11 +535,11 @@ namespace RGolemAddin.View
                 command.Connection = connection;
 
                 command.CommandText = @"select st_r_no
-                                                         , st_r_desc
-                                                         , st_r_t
-                                                    from tpz
-                                                    where st_no = 6
-                                                        and sv = @sv";
+                                                , st_r_desc
+                                                , st_r_t
+                                        from tpz
+                                        where st_no = 6
+                                            and sv = @sv";
 
                 FbDataAdapter adapter = new FbDataAdapter(command);
                 adapter.Fill(dt);

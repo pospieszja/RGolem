@@ -111,6 +111,7 @@ namespace RGolemAddin.View
                 command.Parameters.Add("@ocp", FbDbType.Integer);
                 command.Parameters.Add("@ocu", FbDbType.Integer);
                 command.Parameters.Add("@materialDesc", FbDbType.VarChar);
+                command.Parameters.Add("@zorder", FbDbType.Integer);
 
                 foreach (var item in svDict)
                 {
@@ -171,7 +172,7 @@ namespace RGolemAddin.View
 
                     if (quantity > 0)
                     {
-                        command.CommandText = @"INSERT INTO KOLEJKAZ (SV, PRODUKT, ZLECENIE, ILE_Z, OCC, OC_P, OC_U, NAZWAKZ, ZORDER, ZEND, ZHIDE) VALUES (@sv, @materialNo, @orderSV, @quantity, @occ, @ocp, @ocu, @materialDesc, 0, 0, 0);";
+                        command.CommandText = @"INSERT INTO KOLEJKAZ (SV, PRODUKT, ZLECENIE, ILE_Z, OCC, OC_P, OC_U, NAZWAKZ, ZORDER, ZEND, ZHIDE) VALUES (@sv, @materialNo, @orderSV, @quantity, @occ, @ocp, @ocu, @materialDesc, @zorder, 0, 0);";
                         command.Parameters[0].Value = item.Key;
                         command.Parameters[1].Value = materialNo;
                         command.Parameters[2].Value = orderSV;
@@ -180,6 +181,7 @@ namespace RGolemAddin.View
                         command.Parameters[5].Value = ocp;
                         command.Parameters[6].Value = ocu;
                         command.Parameters[7].Value = materialDesc;
+                        command.Parameters[8].Value = order;
                         command.ExecuteNonQuery();
                     }
                 }

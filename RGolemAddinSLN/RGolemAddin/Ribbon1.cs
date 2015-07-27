@@ -91,5 +91,10 @@ namespace RGolemAddin
                 MessageBox.Show("Raport można wykonać tylko w arkuszu 'dane zbiorcze'");
             }
         }
+
+        private void button5_Click(object sender, RibbonControlEventArgs e)
+        {
+            MessageBox.Show("import zleceń");
+        }
     }
 }

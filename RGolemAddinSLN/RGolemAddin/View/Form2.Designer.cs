@@ -937,7 +937,7 @@
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Name = "Form2";
-            this.Text = "Eksport zleceń";
+            this.Text = "Zlecenia - eksport";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numOcuSV4)).EndInit();

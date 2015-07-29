@@ -94,7 +94,8 @@ namespace RGolemAddin
 
         private void button5_Click(object sender, RibbonControlEventArgs e)
         {
-            MessageBox.Show("import zleceń");
+            var form = new Form4();
+            form.Show();
         }
     }
 }

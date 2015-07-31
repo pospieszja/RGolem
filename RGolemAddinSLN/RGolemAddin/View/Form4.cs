@@ -73,7 +73,29 @@ namespace RGolemAddin.View
             int choosenSV;
 
             //zerowanie licznika wierszy
-            Row = 2;
+            Row = 4;
+
+            Excel.Sheets worksheets = (Excel.Sheets)(Globals.ThisAddIn.Application.Worksheets);
+
+            bool founded = false;
+            foreach (Excel.Worksheet item in worksheets)
+            {
+                if (item.Name == "zlecenia")
+                {
+                    item.Activate();
+                    founded = true;
+                }
+            }
+
+            if (!founded)
+            {
+                MessageBox.Show("Nie znaleziono arkusza o nazwie: " + "zlecenia");
+                return;
+            }
+
+            Excel.Worksheet activeWorksheet = ((Excel.Worksheet)Globals.ThisAddIn.Application.ActiveSheet);
+            activeWorksheet.get_Range("A:H").Clear();
+            activeWorksheet.get_Range("A:H").ClearContents();
 
             choosenSV = Convert.ToInt32(cbxListMachine.SelectedValue);
             var machineList = new int[] { 4, 1, 2, 5, 6, 7, 8 };
@@ -109,13 +131,15 @@ namespace RGolemAddin.View
 
             Excel.Worksheet activeWorksheet = ((Excel.Worksheet)Globals.ThisAddIn.Application.ActiveSheet);
 
-            ((Excel.Range)activeWorksheet.Cells[1, 1]).Value2 = "Nr zlecenia";
-            ((Excel.Range)activeWorksheet.Cells[1, 2]).Value2 = "Stanowisko";
-            ((Excel.Range)activeWorksheet.Cells[1, 3]).Value2 = "Czas [min]";
-            ((Excel.Range)activeWorksheet.Cells[1, 4]).Value2 = "Ilość";
-            ((Excel.Range)activeWorksheet.Cells[1, 5]).Value2 = "Braki";
-            ((Excel.Range)activeWorksheet.Cells[1, 6]).Value2 = "Zmiana";
-            ((Excel.Range)activeWorksheet.Cells[1, 7]).Value2 = "Data";
+            ((Excel.Range)activeWorksheet.Cells[3, 1]).Value2 = "Nr zlecenia";
+            ((Excel.Range)activeWorksheet.Cells[3, 2]).Value2 = "Stanowisko";
+            ((Excel.Range)activeWorksheet.Cells[3, 3]).Value2 = "Czas [min]";
+            ((Excel.Range)activeWorksheet.Cells[3, 4]).Value2 = "Ilość";
+            ((Excel.Range)activeWorksheet.Cells[3, 5]).Value2 = "Braki";
+            ((Excel.Range)activeWorksheet.Cells[3, 6]).Value2 = "Zmiana rulonu";
+            ((Excel.Range)activeWorksheet.Cells[3, 7]).Value2 = "Zmiana";
+            ((Excel.Range)activeWorksheet.Cells[3, 8]).Value2 = "Data";
+            
 
             using (FbConnection connection = new FbConnection(DataBaseConnection.GetConnectionString()))
             {
@@ -137,17 +161,31 @@ namespace RGolemAddin.View
                 paramDateTo.Value = dateTo;
                 command.Parameters.Add(paramDateTo);
 
-                command.CommandText = @"select left(s.nazwa,9) as zlecenie
-                                             , r.sv as sv
-                                             , sum(r.d_time) as sum_d_time
-                                             , sum(r.d_g) as sum_d_g
-                                             , sum(r.d_brak) as sum_d_brak
-                                             , r.z
-                                        from raporth r left outer join serie s on r.ids = s.id
-                                        where r.czas >= @czasOd and r.czas < @czasDo
-                                            and r.sv = @sv and s.id is not null
-                                        group by s.nazwa, r.sv, r.z
-                                        order by r.z";
+                command.CommandText = @"select 
+                                            zlecenie
+                                            , sv
+                                            , sum(d_time) as sum_d_time
+                                            , sum(d_g) as sum_d_g
+                                            , sum(d_brak) as sum_d_brak
+                                            , case sv when 4 then sum(c_sr3) end as sum_c_sr3
+                                            , z
+                                            , dodano
+                                        from
+                                        (                                        
+                                            select left(s.nazwa,9) as zlecenie
+                                                 , r.sv as sv
+                                                 , (r.d_time + r.d_tnone + r.d_tpp + r.d_tpnp + r.d_tp + r.d_tu + r.d_ta + r.d_tmp) as d_time
+                                                 , r.c_sr3  as c_sr3
+                                                 , r.d_g
+                                                 , r.d_brak
+                                                 , r.z
+                                                 , s.dodano
+                                            from raporth r left outer join serie s on r.ids = s.id
+                                            where r.czas >= @czasOd and r.czas < @czasDo
+                                                and r.sv = @sv and s.id is not null
+                                        ) t
+                                        group by zlecenie, sv, z, dodano
+                                        order by z, sv, dodano";
 
                 FbDataAdapter adapter = new FbDataAdapter(command);
                 adapter.Fill(dt);
@@ -193,9 +231,10 @@ namespace RGolemAddin.View
                     ((Excel.Range)activeWorksheet.Cells[Row, 3]).Value2 = Math.Round(Convert.ToDouble(row["SUM_D_TIME"]) / 60, 2);
                     ((Excel.Range)activeWorksheet.Cells[Row, 4]).Value2 = row["SUM_D_G"];
                     ((Excel.Range)activeWorksheet.Cells[Row, 5]).Value2 = row["SUM_D_BRAK"];
-                    ((Excel.Range)activeWorksheet.Cells[Row, 6]).Value2 = row["Z"];
-                    ((Excel.Range)activeWorksheet.Cells[Row, 7]).Value2 = dateTimeFrom.Value.Date;
-                    ((Excel.Range)activeWorksheet.Cells[Row, 7]).NumberFormat = "m/d/yyyy";
+                    ((Excel.Range)activeWorksheet.Cells[Row, 6]).Value2 = row["SUM_C_SR3"];
+                    ((Excel.Range)activeWorksheet.Cells[Row, 7]).Value2 = row["Z"];
+                    ((Excel.Range)activeWorksheet.Cells[Row, 8]).Value2 = row["DODANO"]; ;
+                    ((Excel.Range)activeWorksheet.Cells[Row, 8]).NumberFormat = "yyyy/mm/dd hh:mm:ss";
 
                     Row += 1;
                 }
@@ -203,7 +242,7 @@ namespace RGolemAddin.View
                 connection.Close();
             }
 
-            for (int columnIndex = 1; columnIndex <= 20; columnIndex++)
+            for (int columnIndex = 1; columnIndex <= 7; columnIndex++)
             {
                 ((Excel.Range)activeWorksheet.Cells[1, columnIndex]).EntireColumn.AutoFit();
             }

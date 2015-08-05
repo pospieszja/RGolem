@@ -138,8 +138,9 @@ namespace RGolemAddin.View
             ((Excel.Range)activeWorksheet.Cells[3, 5]).Value2 = "Braki";
             ((Excel.Range)activeWorksheet.Cells[3, 6]).Value2 = "Zmiana rulonu";
             ((Excel.Range)activeWorksheet.Cells[3, 7]).Value2 = "TPP [min]";
-            ((Excel.Range)activeWorksheet.Cells[3, 8]).Value2 = "Zmiana";
-            ((Excel.Range)activeWorksheet.Cells[3, 9]).Value2 = "Data";
+            ((Excel.Range)activeWorksheet.Cells[3, 8]).Value2 = "TPU [min]";
+            ((Excel.Range)activeWorksheet.Cells[3, 9]).Value2 = "Zmiana";
+            ((Excel.Range)activeWorksheet.Cells[3, 10]).Value2 = "Data";
             
 
             using (FbConnection connection = new FbConnection(DataBaseConnection.GetConnectionString()))
@@ -169,6 +170,7 @@ namespace RGolemAddin.View
                                             , sum(d_g) as sum_d_g
                                             , sum(d_brak) as sum_d_brak
                                             , sum(d_tpp) as sum_d_tpp
+                                            , sum(d_tpu) as sum_d_tpu
                                             , case sv when 4 then sum(c_sr3) end as sum_c_sr3
                                             , z
                                             , dodano
@@ -179,6 +181,7 @@ namespace RGolemAddin.View
                                                  , (r.d_time + r.d_tnone + r.d_tpp + r.d_tpnp + r.d_tp + r.d_tu + r.d_ta + r.d_tmp) as d_time
                                                  , r.c_sr3  as c_sr3
                                                  , r.d_tpp
+                                                 , r.d_tu + r.d_tp as d_tpu
                                                  , r.d_g
                                                  , r.d_brak
                                                  , r.z
@@ -236,9 +239,10 @@ namespace RGolemAddin.View
                     ((Excel.Range)activeWorksheet.Cells[Row, 5]).Value2 = row["SUM_D_BRAK"];
                     ((Excel.Range)activeWorksheet.Cells[Row, 6]).Value2 = row["SUM_C_SR3"];
                     ((Excel.Range)activeWorksheet.Cells[Row, 7]).Value2 = Math.Round(Convert.ToDouble(row["SUM_D_TPP"]) / 60, 2);
-                    ((Excel.Range)activeWorksheet.Cells[Row, 8]).Value2 = row["Z"];
-                    ((Excel.Range)activeWorksheet.Cells[Row, 9]).Value2 = row["DODANO"]; ;
-                    ((Excel.Range)activeWorksheet.Cells[Row, 9]).NumberFormat = "yyyy/mm/dd hh:mm:ss";
+                    ((Excel.Range)activeWorksheet.Cells[Row, 8]).Value2 = Math.Round(Convert.ToDouble(row["SUM_D_TPU"]) / 60, 2);
+                    ((Excel.Range)activeWorksheet.Cells[Row, 9]).Value2 = row["Z"];
+                    ((Excel.Range)activeWorksheet.Cells[Row, 10]).Value2 = row["DODANO"]; ;
+                    ((Excel.Range)activeWorksheet.Cells[Row, 10]).NumberFormat = "yyyy/mm/dd hh:mm:ss";
 
                     Row += 1;
                 }

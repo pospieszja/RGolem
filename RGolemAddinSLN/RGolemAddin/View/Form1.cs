@@ -342,8 +342,39 @@ namespace RGolemAddin.View
 
 
             int rowIndex = 3;
+            int iterationIndex = 1;
             foreach (DataRow row in dt.Rows)
             {
+                //operatorzy
+                dt2.Clear();
+                using (FbConnection connection = new FbConnection(DataBaseConnection.GetConnectionString()))
+                {
+                    connection.Open();
+
+                    transaction = connection.BeginTransaction();
+                    command.Transaction = transaction;
+                    command.Connection = connection;
+
+                    command.CommandText = @"select distinct left(operator, position(' ',operator) ) as operator
+                                            from logev
+                                            where czas >= @czasOd and czas < @czasDo and operator <> ''
+                                                and sv = @sv and z =" + iterationIndex;
+
+                    FbDataAdapter adapter = new FbDataAdapter(command);
+                    adapter.Fill(dt2);
+
+                    connection.Close();
+                }
+
+                foreach (DataRow row2 in dt2.Rows)
+                {
+                    ((Excel.Range)activeWorksheet.Cells[rowIndex + 1, 1]).Value2 = ((Excel.Range)activeWorksheet.Cells[rowIndex + 1, 1]).Value2 + " / " + row2["operator"];
+                }
+
+                string tempValue = ((Excel.Range)activeWorksheet.Cells[rowIndex + 1, 1]).Value2;
+                ((Excel.Range)activeWorksheet.Cells[rowIndex + 1, 1]).Value2 = tempValue.Substring(3, tempValue.Length - 3);
+
+
                 //całkowity czas
                 workedTime = Convert.ToDouble(row["SUM_D_TIME"]) + Convert.ToDouble(row["SUM_D_TMP"]) + Convert.ToDouble(row["SUM_D_TNONE"])
                                 + Convert.ToDouble(row["SUM_D_TPP"]) + Convert.ToDouble(row["SUM_D_TPNP"]) + Convert.ToDouble(row["SUM_D_TP"])
@@ -371,6 +402,7 @@ namespace RGolemAddin.View
                 }
 
                 rowIndex += 2;
+                iterationIndex += 1;
             }
 
 
@@ -411,7 +443,7 @@ namespace RGolemAddin.View
                     command.Transaction = transaction;
                     command.Connection = connection;
 
-                    command.CommandText = @"select sum(d_sr" + row["ST_R_NO"] + ") as sum_d_sr, sum(c_sr" + row["ST_R_NO"] + ") as sum_c_sr, z from raporth where sv = @sv and czas >= @czasOd and czas < @czasDo group by z";
+                    command.CommandText = @"select sum(d_sr" + row["ST_R_NO"] + ") as sum_d_sr, sum(c_sr" + row["ST_R_NO"] + ") as sum_c_sr, z from raporth where sv = @sv and czas >= @czasOd and czas < @czasDo group by z order by z";
 
                     FbDataAdapter adapter = new FbDataAdapter(command);
                     adapter.Fill(dt2);
@@ -485,7 +517,7 @@ namespace RGolemAddin.View
                     command.Transaction = transaction;
                     command.Connection = connection;
 
-                    command.CommandText = @"select sum(d_sr" + row["ST_R_NO"] + ") as sum_d_sr, sum(c_sr" + row["ST_R_NO"] + ") as sum_c_sr from raporth where sv = @sv and czas >= @czasOd and czas < @czasDo group by z";
+                    command.CommandText = @"select sum(d_sr" + row["ST_R_NO"] + ") as sum_d_sr, sum(c_sr" + row["ST_R_NO"] + ") as sum_c_sr from raporth where sv = @sv and czas >= @czasOd and czas < @czasDo group by z order by z";
 
                     FbDataAdapter adapter = new FbDataAdapter(command);
                     adapter.Fill(dt2);
@@ -561,7 +593,7 @@ namespace RGolemAddin.View
                     command.Transaction = transaction;
                     command.Connection = connection;
 
-                    command.CommandText = @"select sum(d_sr" + row["ST_R_NO"] + ") as sum_d_sr, sum(c_sr" + row["ST_R_NO"] + ") as sum_c_sr from raporth where sv = @sv and czas >= @czasOd and czas < @czasDo group by z";
+                    command.CommandText = @"select sum(d_sr" + row["ST_R_NO"] + ") as sum_d_sr, sum(c_sr" + row["ST_R_NO"] + ") as sum_c_sr from raporth where sv = @sv and czas >= @czasOd and czas < @czasDo group by z order by z";
 
                     FbDataAdapter adapter = new FbDataAdapter(command);
                     adapter.Fill(dt2);
@@ -637,7 +669,7 @@ namespace RGolemAddin.View
                     command.Transaction = transaction;
                     command.Connection = connection;
 
-                    command.CommandText = @"select sum(d_sr" + row["ST_R_NO"] + ") as sum_d_sr, sum(c_sr" + row["ST_R_NO"] + ") as sum_c_sr from raporth where sv = @sv and czas >= @czasOd and czas < @czasDo group by z";
+                    command.CommandText = @"select sum(d_sr" + row["ST_R_NO"] + ") as sum_d_sr, sum(c_sr" + row["ST_R_NO"] + ") as sum_c_sr from raporth where sv = @sv and czas >= @czasOd and czas < @czasDo group by z order by z";
 
                     FbDataAdapter adapter = new FbDataAdapter(command);
                     adapter.Fill(dt2);

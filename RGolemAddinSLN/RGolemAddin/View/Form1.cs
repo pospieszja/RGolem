@@ -357,7 +357,7 @@ namespace RGolemAddin.View
 
                     command.CommandText = @"select distinct left(operator, position(' ',operator) ) as operator
                                             from logev
-                                            where czas >= @czasOd and czas < @czasDo and operator <> ''
+                                            where czas >= @czasOd and czas < @czasDo and id_op <> 0
                                                 and sv = @sv and z =" + iterationIndex;
 
                     FbDataAdapter adapter = new FbDataAdapter(command);
@@ -372,8 +372,10 @@ namespace RGolemAddin.View
                 }
 
                 string tempValue = ((Excel.Range)activeWorksheet.Cells[rowIndex + 1, 1]).Value2;
-                ((Excel.Range)activeWorksheet.Cells[rowIndex + 1, 1]).Value2 = tempValue.Substring(3, tempValue.Length - 3);
-
+                if (tempValue != null)
+                {
+                    ((Excel.Range)activeWorksheet.Cells[rowIndex + 1, 1]).Value2 = tempValue.Substring(3, tempValue.Length - 3);
+                }
 
                 //całkowity czas
                 workedTime = Convert.ToDouble(row["SUM_D_TIME"]) + Convert.ToDouble(row["SUM_D_TMP"]) + Convert.ToDouble(row["SUM_D_TNONE"])

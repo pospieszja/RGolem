@@ -94,8 +94,11 @@ namespace RGolemAddin.View
             }
 
             Excel.Worksheet activeWorksheet = ((Excel.Worksheet)Globals.ThisAddIn.Application.ActiveSheet);
-            activeWorksheet.get_Range("A:H").Clear();
-            activeWorksheet.get_Range("A:H").ClearContents();
+            activeWorksheet.get_Range("A:J").Clear();
+            activeWorksheet.get_Range("A:J").ClearContents();
+
+            activeWorksheet.get_Range("N:N").Clear();
+            activeWorksheet.get_Range("N:N").ClearContents();
 
             choosenSV = Convert.ToInt32(cbxListMachine.SelectedValue);
             var machineList = new int[] { 4, 1, 2, 5, 6, 7, 8 };
@@ -141,6 +144,7 @@ namespace RGolemAddin.View
             ((Excel.Range)activeWorksheet.Cells[3, 8]).Value2 = "TPU [min]";
             ((Excel.Range)activeWorksheet.Cells[3, 9]).Value2 = "Zmiana";
             ((Excel.Range)activeWorksheet.Cells[3, 10]).Value2 = "Data";
+            ((Excel.Range)activeWorksheet.Cells[3, 14]).Value2 = "OCC";
             
 
             using (FbConnection connection = new FbConnection(DataBaseConnection.GetConnectionString()))
@@ -174,6 +178,7 @@ namespace RGolemAddin.View
                                             , case sv when 4 then sum(c_sr3) end as sum_c_sr3
                                             , z
                                             , dodano
+                                            , occ
                                         from
                                         (                                        
                                             select left(s.nazwa,9) as zlecenie
@@ -186,11 +191,12 @@ namespace RGolemAddin.View
                                                  , r.d_brak
                                                  , r.z
                                                  , s.dodano
+                                                 , s.occ
                                             from raporth r left outer join serie s on r.ids = s.id
                                             where r.czas >= @czasOd and r.czas < @czasDo
                                                 and r.sv = @sv and s.id is not null
                                         ) t
-                                        group by zlecenie, sv, z, dodano
+                                        group by zlecenie, sv, z, dodano, occ
                                         order by z, sv, dodano";
 
                 FbDataAdapter adapter = new FbDataAdapter(command);
@@ -243,6 +249,7 @@ namespace RGolemAddin.View
                     ((Excel.Range)activeWorksheet.Cells[Row, 9]).Value2 = row["Z"];
                     ((Excel.Range)activeWorksheet.Cells[Row, 10]).Value2 = row["DODANO"]; ;
                     ((Excel.Range)activeWorksheet.Cells[Row, 10]).NumberFormat = "yyyy/mm/dd hh:mm:ss";
+                    ((Excel.Range)activeWorksheet.Cells[Row, 14]).Value2 = row["OCC"]; ;
 
                     Row += 1;
                 }

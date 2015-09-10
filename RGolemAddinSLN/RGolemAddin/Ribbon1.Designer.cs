@@ -43,6 +43,7 @@
             this.button3 = this.Factory.CreateRibbonButton();
             this.group3 = this.Factory.CreateRibbonGroup();
             this.button5 = this.Factory.CreateRibbonButton();
+            this.button6 = this.Factory.CreateRibbonButton();
             this.tab1.SuspendLayout();
             this.group1.SuspendLayout();
             this.group2.SuspendLayout();
@@ -62,6 +63,7 @@
             this.group1.Items.Add(this.button1);
             this.group1.Items.Add(this.button2);
             this.group1.Items.Add(this.button4);
+            this.group1.Items.Add(this.button6);
             this.group1.Label = "Raporty";
             this.group1.Name = "group1";
             // 
@@ -107,6 +109,12 @@
             this.button5.Name = "button5";
             this.button5.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.button5_Click);
             // 
+            // button6
+            // 
+            this.button6.Label = "Operatorzy";
+            this.button6.Name = "button6";
+            this.button6.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.button6_Click);
+            // 
             // Ribbon1
             // 
             this.Name = "Ribbon1";
@@ -135,6 +143,7 @@
         internal Microsoft.Office.Tools.Ribbon.RibbonButton button4;
         internal Microsoft.Office.Tools.Ribbon.RibbonGroup group3;
         internal Microsoft.Office.Tools.Ribbon.RibbonButton button5;
+        internal Microsoft.Office.Tools.Ribbon.RibbonButton button6;
     }
 
     partial class ThisRibbonCollection

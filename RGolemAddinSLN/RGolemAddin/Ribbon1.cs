@@ -97,5 +97,11 @@ namespace RGolemAddin
             var form = new Form4();
             form.Show();
         }
+
+        private void button6_Click(object sender, RibbonControlEventArgs e)
+        {
+            var form = new Form5();
+            form.Show();
+        }
     }
 }

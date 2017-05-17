@@ -34,7 +34,7 @@
     <PublishUrl>C:\publish\RGolem\</PublishUrl>
     <InstallUrl />
     <TargetCulture>pl</TargetCulture>
-    <ApplicationVersion>1.0.0.25</ApplicationVersion>
+    <ApplicationVersion>1.0.0.35</ApplicationVersion>
     <AutoIncrementApplicationRevision>true</AutoIncrementApplicationRevision>
     <UpdateEnabled>true</UpdateEnabled>
     <UpdateInterval>0</UpdateInterval>
@@ -218,6 +218,12 @@
     <Compile Include="View\Form5.Designer.cs">
       <DependentUpon>Form5.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\Form6.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Form6.Designer.cs">
+      <DependentUpon>Form6.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -245,6 +251,9 @@
     <EmbeddedResource Include="View\Form5.resx">
       <DependentUpon>Form5.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="View\Form6.resx">
+      <DependentUpon>Form6.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -264,6 +273,7 @@
     <Compile Include="ThisAddIn.cs">
       <SubType>Code</SubType>
     </Compile>
+    <None Include="RGolemAddin_1_TemporaryKey.pfx" />
     <None Include="RGolemAddin_TemporaryKey.pfx" />
     <None Include="ThisAddIn.Designer.xml">
       <DependentUpon>ThisAddIn.cs</DependentUpon>
@@ -281,10 +291,10 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>RGolemAddin_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>RGolemAddin_1_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>15C8E24D507E9B11396091B0805BBBD8E472A24E</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>65F24D8EA59F9BCE9C221E21B86EABA67B08CD9D</ManifestCertificateThumbprint>
   </PropertyGroup>
   <!-- Include the build rules for a C# project. -->
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

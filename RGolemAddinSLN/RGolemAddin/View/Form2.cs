@@ -25,6 +25,13 @@ namespace RGolemAddin.View
             InitializeComponent();
             Excel.Worksheet activeWorksheet = ((Excel.Worksheet)Globals.ThisAddIn.Application.ActiveSheet);
 
+            Excel.Workbooks workbooks = (Excel.Workbooks)(Globals.ThisAddIn.Application.Workbooks);
+            foreach (Excel.Workbook item in workbooks)
+            {
+                var a = item.Name;
+            }
+            
+
             var activeCell = Globals.ThisAddIn.Application.ActiveCell;
             var rowNo = activeCell.Row;
 
@@ -44,6 +51,7 @@ namespace RGolemAddin.View
             numQuanSV6.Value = quantity;
             numQuanSV7.Value = quantity;
             numQuanSV8.Value = quantity;
+            numQuanSV9.Value = quantity;
 
             //domyślna wartość OCP
             numOcpSV4.Value = 1;
@@ -53,6 +61,7 @@ namespace RGolemAddin.View
             numOcpSV6.Value = 1;
             numOcpSV7.Value = 1;
             numOcpSV8.Value = 1;
+            numOcpSV9.Value = 1;
 
             //domyslna wartość OCU
             numOcuSV4.Value = 15;
@@ -62,6 +71,7 @@ namespace RGolemAddin.View
             numOcuSV6.Value = 15;
             numOcuSV7.Value = 15;
             numOcuSV8.Value = 15;
+            numOcuSV9.Value = 10;
 
         }
 
@@ -94,6 +104,8 @@ namespace RGolemAddin.View
             svDict.Add(7, "L2");
             //Robot Linia 4
             svDict.Add(8, "L4");
+            //Szlifierka
+            svDict.Add(9, "SZ");
 
             using (FbConnection connection = new FbConnection(DataBaseConnection.GetConnectionString()))
             {
@@ -164,6 +176,13 @@ namespace RGolemAddin.View
                             occ = (int)numOccSV8.Value;
                             ocp = (int)numOcpSV8.Value;
                             ocu = (int)numOcuSV8.Value;
+                            orderSV = order + "/" + item.Value;
+                            break;
+                        case 9:
+                            quantity = (int)numQuanSV9.Value;
+                            occ = (int)numOccSV9.Value;
+                            ocp = (int)numOcpSV9.Value;
+                            ocu = (int)numOcuSV9.Value;
                             orderSV = order + "/" + item.Value;
                             break;
                         default:

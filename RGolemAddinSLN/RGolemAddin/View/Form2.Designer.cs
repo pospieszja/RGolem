@@ -99,6 +99,15 @@
             this.label30 = new System.Windows.Forms.Label();
             this.label31 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
+            this.groupBox9 = new System.Windows.Forms.GroupBox();
+            this.numOcuSV9 = new System.Windows.Forms.NumericUpDown();
+            this.numOcpSV9 = new System.Windows.Forms.NumericUpDown();
+            this.numOccSV9 = new System.Windows.Forms.NumericUpDown();
+            this.numQuanSV9 = new System.Windows.Forms.NumericUpDown();
+            this.label32 = new System.Windows.Forms.Label();
+            this.label33 = new System.Windows.Forms.Label();
+            this.label34 = new System.Windows.Forms.Label();
+            this.label35 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numOcuSV4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numOcpSV4)).BeginInit();
@@ -135,6 +144,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.numOcpSV8)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numOccSV8)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numQuanSV8)).BeginInit();
+            this.groupBox9.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numOcuSV9)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numOcpSV9)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numOccSV9)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numQuanSV9)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -624,7 +638,7 @@
             this.groupBox6.Size = new System.Drawing.Size(204, 180);
             this.groupBox6.TabIndex = 15;
             this.groupBox6.TabStop = false;
-            this.groupBox6.Text = "Robot Linia 1";
+            this.groupBox6.Text = "Robot 1 Linia 1";
             // 
             // numOcuSV6
             // 
@@ -725,7 +739,7 @@
             this.groupBox7.Size = new System.Drawing.Size(204, 180);
             this.groupBox7.TabIndex = 16;
             this.groupBox7.TabStop = false;
-            this.groupBox7.Text = "Robot Linia 2";
+            this.groupBox7.Text = "Robot 1 Linia 2";
             // 
             // numOcuSV7
             // 
@@ -826,7 +840,7 @@
             this.groupBox8.Size = new System.Drawing.Size(204, 180);
             this.groupBox8.TabIndex = 17;
             this.groupBox8.TabStop = false;
-            this.groupBox8.Text = "Robot Linia 4";
+            this.groupBox8.Text = "Robot 2 Linia 4";
             // 
             // numOcuSV8
             // 
@@ -922,11 +936,113 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // groupBox9
+            // 
+            this.groupBox9.Controls.Add(this.numOcuSV9);
+            this.groupBox9.Controls.Add(this.numOcpSV9);
+            this.groupBox9.Controls.Add(this.numOccSV9);
+            this.groupBox9.Controls.Add(this.numQuanSV9);
+            this.groupBox9.Controls.Add(this.label32);
+            this.groupBox9.Controls.Add(this.label33);
+            this.groupBox9.Controls.Add(this.label34);
+            this.groupBox9.Controls.Add(this.label35);
+            this.groupBox9.Location = new System.Drawing.Point(222, 538);
+            this.groupBox9.Name = "groupBox9";
+            this.groupBox9.Size = new System.Drawing.Size(204, 180);
+            this.groupBox9.TabIndex = 21;
+            this.groupBox9.TabStop = false;
+            this.groupBox9.Text = "Szlifierka";
+            // 
+            // numOcuSV9
+            // 
+            this.numOcuSV9.Location = new System.Drawing.Point(9, 149);
+            this.numOcuSV9.Maximum = new decimal(new int[] {
+            9999,
+            0,
+            0,
+            0});
+            this.numOcuSV9.Name = "numOcuSV9";
+            this.numOcuSV9.Size = new System.Drawing.Size(70, 20);
+            this.numOcuSV9.TabIndex = 20;
+            // 
+            // numOcpSV9
+            // 
+            this.numOcpSV9.Location = new System.Drawing.Point(9, 110);
+            this.numOcpSV9.Maximum = new decimal(new int[] {
+            9999,
+            0,
+            0,
+            0});
+            this.numOcpSV9.Name = "numOcpSV9";
+            this.numOcpSV9.Size = new System.Drawing.Size(70, 20);
+            this.numOcpSV9.TabIndex = 19;
+            // 
+            // numOccSV9
+            // 
+            this.numOccSV9.Location = new System.Drawing.Point(9, 71);
+            this.numOccSV9.Maximum = new decimal(new int[] {
+            9999,
+            0,
+            0,
+            0});
+            this.numOccSV9.Name = "numOccSV9";
+            this.numOccSV9.Size = new System.Drawing.Size(70, 20);
+            this.numOccSV9.TabIndex = 18;
+            // 
+            // numQuanSV9
+            // 
+            this.numQuanSV9.Location = new System.Drawing.Point(9, 32);
+            this.numQuanSV9.Maximum = new decimal(new int[] {
+            9999,
+            0,
+            0,
+            0});
+            this.numQuanSV9.Name = "numQuanSV9";
+            this.numQuanSV9.Size = new System.Drawing.Size(70, 20);
+            this.numQuanSV9.TabIndex = 17;
+            // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(6, 133);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(134, 13);
+            this.label32.TabIndex = 11;
+            this.label32.Text = "Optymalny czas ustawiania";
+            // 
+            // label33
+            // 
+            this.label33.AutoSize = true;
+            this.label33.Location = new System.Drawing.Point(6, 94);
+            this.label33.Name = "label33";
+            this.label33.Size = new System.Drawing.Size(146, 13);
+            this.label33.TabIndex = 9;
+            this.label33.Text = "Optymalny czas przezbrojenia";
+            // 
+            // label34
+            // 
+            this.label34.AutoSize = true;
+            this.label34.Location = new System.Drawing.Point(6, 55);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(140, 13);
+            this.label34.TabIndex = 7;
+            this.label34.Text = "Optymalny czas cyklu [OCC]";
+            // 
+            // label35
+            // 
+            this.label35.AutoSize = true;
+            this.label35.Location = new System.Drawing.Point(6, 16);
+            this.label35.Name = "label35";
+            this.label35.Size = new System.Drawing.Size(85, 13);
+            this.label35.TabIndex = 0;
+            this.label35.Text = "Ilość zamówiona";
+            // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(709, 728);
+            this.Controls.Add(this.groupBox9);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.groupBox8);
             this.Controls.Add(this.groupBox7);
@@ -982,6 +1098,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.numOcpSV8)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numOccSV8)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numQuanSV8)).EndInit();
+            this.groupBox9.ResumeLayout(false);
+            this.groupBox9.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numOcuSV9)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numOcpSV9)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numOccSV9)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numQuanSV9)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1059,5 +1181,14 @@
         private System.Windows.Forms.NumericUpDown numOcpSV8;
         private System.Windows.Forms.NumericUpDown numOccSV8;
         private System.Windows.Forms.NumericUpDown numQuanSV8;
+        private System.Windows.Forms.GroupBox groupBox9;
+        private System.Windows.Forms.NumericUpDown numOcuSV9;
+        private System.Windows.Forms.NumericUpDown numOcpSV9;
+        private System.Windows.Forms.NumericUpDown numOccSV9;
+        private System.Windows.Forms.NumericUpDown numQuanSV9;
+        private System.Windows.Forms.Label label32;
+        private System.Windows.Forms.Label label33;
+        private System.Windows.Forms.Label label34;
+        private System.Windows.Forms.Label label35;
     }
 }

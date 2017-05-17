@@ -103,5 +103,11 @@ namespace RGolemAddin
             var form = new Form5();
             form.Show();
         }
+
+        private void btnOrderQueue_Click(object sender, RibbonControlEventArgs e)
+        {
+            var form = new Form6();
+            form.Show();
+        }
     }
 }

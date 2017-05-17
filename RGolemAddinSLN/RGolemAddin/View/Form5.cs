@@ -147,13 +147,13 @@ namespace RGolemAddin.View
                             svName = "Spawarka";
                             break;
                         case 6:
-                            svName = "Robot 1";
+                            svName = "Robot 1 Linia 1";
                             break;
                         case 7:
-                            svName = "Robot 2";
+                            svName = "Robot 1 Linia 2";
                             break;
                         case 8:
-                            svName = "Robot 3";
+                            svName = "Robot 2 Linia 4";
                             break;
                         case 9:
                             svName = "Szlifierka";

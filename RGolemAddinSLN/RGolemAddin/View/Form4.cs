@@ -48,7 +48,7 @@ namespace RGolemAddin.View
                 transaction = connection.BeginTransaction();
                 command.Transaction = transaction;
                 command.Connection = connection;
-                command.CommandText = @"select sv, maszyna from maszyny where sv in (1,2,4,5,6,7,8)";
+                command.CommandText = @"select sv, maszyna from maszyny where sv in (1,2,4,5,6,7,8,9)";
                 FbDataAdapter adapter = new FbDataAdapter(command);
                 adapter.Fill(dt);
 
@@ -94,14 +94,12 @@ namespace RGolemAddin.View
             }
 
             Excel.Worksheet activeWorksheet = ((Excel.Worksheet)Globals.ThisAddIn.Application.ActiveSheet);
-            activeWorksheet.get_Range("A:J").Clear();
             activeWorksheet.get_Range("A:J").ClearContents();
 
-            activeWorksheet.get_Range("N:N").Clear();
             activeWorksheet.get_Range("N:N").ClearContents();
 
             choosenSV = Convert.ToInt32(cbxListMachine.SelectedValue);
-            var machineList = new int[] { 4, 1, 2, 5, 6, 7, 8 };
+            var machineList = new int[] { 4, 1, 2, 5, 6, 7, 8, 9 };
 
             // 0 - generuje wynik dla wszystkich maszyn
             // W pozostałych przypadkach generuje wynik dla wybranej maszyny
@@ -145,7 +143,9 @@ namespace RGolemAddin.View
             ((Excel.Range)activeWorksheet.Cells[3, 9]).Value2 = "Zmiana";
             ((Excel.Range)activeWorksheet.Cells[3, 10]).Value2 = "Data";
             ((Excel.Range)activeWorksheet.Cells[3, 14]).Value2 = "OCC";
-            
+            ((Excel.Range)activeWorksheet.Cells[3, 17]).Value2 = "TMP [min]";
+            ((Excel.Range)activeWorksheet.Cells[3, 32]).Value2 = "TPP zlec [min]";
+
 
             using (FbConnection connection = new FbConnection(DataBaseConnection.GetConnectionString()))
             {
@@ -175,16 +175,23 @@ namespace RGolemAddin.View
                                             , sum(d_brak) as sum_d_brak
                                             , sum(d_tpp) as sum_d_tpp
                                             , sum(d_tpu) as sum_d_tpu
+                                            , sum(d_tmp) as sum_d_tmp
                                             , case sv when 4 then sum(c_sr3) end as sum_c_sr3
                                             , z
                                             , dodano
                                             , occ
+                                            , COALESCE(case sv when 4 then sum(d_sr2 + d_sr6) when 1 then sum(d_sr2 + d_sr3) when 2 then sum(d_sr2 + d_sr3) when 5 then sum(d_sr2 + d_sr5) when 6 then sum(d_sr2 + d_sr3) when 7 then sum(d_sr2 + d_sr3) when 8 then sum(d_sr2 + d_sr3) end , 0) as sum_d_tpp_zlec
                                         from
                                         (                                        
                                             select left(s.nazwa,9) as zlecenie
                                                  , r.sv as sv
                                                  , (r.d_time + r.d_tnone + r.d_tpp + r.d_tpnp + r.d_tp + r.d_tu + r.d_ta + r.d_tmp) as d_time
-                                                 , r.c_sr3  as c_sr3
+                                                 , r.d_tmp
+                                                 , r.d_sr2
+                                                 , r.d_sr3
+                                                 , r.d_sr5
+                                                 , r.d_sr6
+                                                 , r.c_sr3 as c_sr3
                                                  , r.d_tpp
                                                  , r.d_tu + r.d_tp as d_tpu
                                                  , r.d_g
@@ -223,13 +230,13 @@ namespace RGolemAddin.View
                             svName = "Spawarka";
                             break;
                         case 6:
-                            svName = "Robot 1";
+                            svName = "Robot 1 Linia 1";
                             break;
                         case 7:
-                            svName = "Robot 2";
+                            svName = "Robot 1 Linia 2";
                             break;
                         case 8:
-                            svName = "Robot 3";
+                            svName = "Robot 2 Linia 4";
                             break;
                         case 9:
                             svName = "Szlifierka";
@@ -250,7 +257,8 @@ namespace RGolemAddin.View
                     ((Excel.Range)activeWorksheet.Cells[Row, 10]).Value2 = row["DODANO"]; ;
                     ((Excel.Range)activeWorksheet.Cells[Row, 10]).NumberFormat = "yyyy/mm/dd hh:mm:ss";
                     ((Excel.Range)activeWorksheet.Cells[Row, 14]).Value2 = row["OCC"]; ;
-
+                    ((Excel.Range)activeWorksheet.Cells[Row, 17]).Value2 = Math.Round(Convert.ToDouble(row["SUM_D_TMP"]) / 60, 2);
+                    ((Excel.Range)activeWorksheet.Cells[Row, 32]).Value2 = Math.Round(Convert.ToDouble(row["SUM_D_TPP_ZLEC"]) / 60, 2);
                     Row += 1;
                 }
 

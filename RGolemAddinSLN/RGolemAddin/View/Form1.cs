@@ -46,7 +46,7 @@ namespace RGolemAddin.View
                 transaction = connection.BeginTransaction();
                 command.Transaction = transaction;
                 command.Connection = connection;
-                command.CommandText = @"select sv, maszyna from maszyny where sv in (1,2,4,5,6,7,8)";
+                command.CommandText = @"select sv, maszyna from maszyny where sv in (1,2,4,5,6,7,8,9)";
                 FbDataAdapter adapter = new FbDataAdapter(command);
                 adapter.Fill(dt);
 
@@ -71,7 +71,7 @@ namespace RGolemAddin.View
             int choosenSV;
 
             choosenSV = Convert.ToInt32(cbxListMachine.SelectedValue);
-            var machineList = new int[] { 4, 1, 2, 5, 6, 7, 8 };
+            var machineList = new int[] { 4, 1, 2, 5, 6, 7, 8, 9 };
 
             // 0 - generuje wynik dla wszystkich maszyn
             // W pozostałych przypadkach generuje wynik dla wybranej maszyny
@@ -166,13 +166,13 @@ namespace RGolemAddin.View
                     sheetName = "Spawarka";
                     break;
                 case 6:
-                    sheetName = "Robot 1";
+                    sheetName = "Robot 1 Linia 1";
                     break;
                 case 7:
-                    sheetName = "Robot 2";
+                    sheetName = "Robot 1 Linia 2";
                     break;
                 case 8:
-                    sheetName = "Robot 3";
+                    sheetName = "Robot 2 Linia 4";
                     break;
                 case 9:
                     sheetName = "Szlifierka";
@@ -215,7 +215,7 @@ namespace RGolemAddin.View
             activeWorksheet.get_Range("A1").Value2 = "Raport zbiorczy dla maszyny: " + sheetName + " za okres: " + dateFrom.ToString("yyyy-MM-dd HH:mm") + " - " + dateTo.ToString("yyyy-MM-dd HH:mm");
 
             //Podsumowanie
-            activeWorksheet.get_Range("A2", "O100").Font.Size = 9;
+            activeWorksheet.get_Range("A2", "U100").Font.Size = 9;
 
             activeWorksheet.get_Range("C2").Value2 = "Czas ogółem";
             activeWorksheet.get_Range("D2").Value2 = "Praca";
@@ -336,46 +336,26 @@ namespace RGolemAddin.View
             activeWorksheet.get_Range("B51").Value2 = "[%]";
             activeWorksheet.get_Range("B52").Value2 = "[delta]";
 
+            //Operatorzy
+            activeWorksheet.get_Range("P2").Value2 = "I zmiana";
+            activeWorksheet.get_Range("R2").Value2 = "II zmiana";
+            activeWorksheet.get_Range("T2").Value2 = "III zmiana";
+
             /*
              * Projekt layoutu <-
             */
 
 
             int rowIndex = 3;
-            int iterationIndex = 1;
             foreach (DataRow row in dt.Rows)
             {
-                //operatorzy
-                dt2.Clear();
-                using (FbConnection connection = new FbConnection(DataBaseConnection.GetConnectionString()))
-                {
-                    connection.Open();
 
-                    transaction = connection.BeginTransaction();
-                    command.Transaction = transaction;
-                    command.Connection = connection;
 
-                    command.CommandText = @"select distinct left(operator, position(' ',operator) ) as operator
-                                            from logev
-                                            where czas >= @czasOd and czas < @czasDo and id_op <> 0
-                                                and sv = @sv and z =" + iterationIndex;
-
-                    FbDataAdapter adapter = new FbDataAdapter(command);
-                    adapter.Fill(dt2);
-
-                    connection.Close();
-                }
-
-                foreach (DataRow row2 in dt2.Rows)
-                {
-                    ((Excel.Range)activeWorksheet.Cells[rowIndex + 1, 1]).Value2 = ((Excel.Range)activeWorksheet.Cells[rowIndex + 1, 1]).Value2 + " / " + row2["operator"];
-                }
-
-                string tempValue = ((Excel.Range)activeWorksheet.Cells[rowIndex + 1, 1]).Value2;
-                if (tempValue != null)
-                {
-                    ((Excel.Range)activeWorksheet.Cells[rowIndex + 1, 1]).Value2 = tempValue.Substring(3, tempValue.Length - 3);
-                }
+                //string tempValue = ((Excel.Range)activeWorksheet.Cells[rowIndex + 1, 1]).Value2;
+                //if (tempValue != null)
+                //{
+                //    ((Excel.Range)activeWorksheet.Cells[rowIndex + 1, 1]).Value2 = tempValue.Substring(3, tempValue.Length - 3);
+                //}
 
                 //całkowity czas
                 workedTime = Convert.ToDouble(row["SUM_D_TIME"]) + Convert.ToDouble(row["SUM_D_TMP"]) + Convert.ToDouble(row["SUM_D_TNONE"])
@@ -404,7 +384,6 @@ namespace RGolemAddin.View
                 }
 
                 rowIndex += 2;
-                iterationIndex += 1;
             }
 
 
@@ -452,9 +431,9 @@ namespace RGolemAddin.View
                     foreach (DataRow row2 in dt2.Rows)
                     {
                         ((Excel.Range)activeWorksheet.Cells[rowIndex + 1, j]).Value2 = Math.Round(Convert.ToDouble(row2["SUM_D_SR"]) / 60, 2);
-                        if (Convert.ToInt32(row2["SUM_C_SR"]) > 0)
-                        {
-                            if (Convert.ToDouble(row["ST_R_T"]) > 0)
+                        //if (Convert.ToInt32(row2["SUM_C_SR"]) > 0)
+                        //{
+                        if (Convert.ToDouble(row["ST_R_T"]) > 0 && Convert.ToDouble(row2["SUM_C_SR"]) > 0)
                             {
                                 ((Excel.Range)activeWorksheet.Cells[rowIndex + 2, j]).Value2 = ((Convert.ToDouble(row2["SUM_D_SR"]) / 60) / (Convert.ToDouble(row["ST_R_T"]) * Convert.ToDouble(row2["SUM_C_SR"])) - 1);
                             }
@@ -472,7 +451,7 @@ namespace RGolemAddin.View
                                 ((Excel.Range)activeWorksheet.Cells[rowIndex + 2, j]).Font.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Green);
                                 ((Excel.Range)activeWorksheet.Cells[rowIndex + 3, j]).Font.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Green);
                             }
-                        }
+                        //}
                         rowIndex += 3;
                     }
 
@@ -526,8 +505,8 @@ namespace RGolemAddin.View
                     foreach (DataRow row2 in dt2.Rows)
                     {
                         ((Excel.Range)activeWorksheet.Cells[rowIndex + 1, j]).Value2 = Math.Round(Convert.ToDouble(row2["SUM_D_SR"]) / 60, 2);
-                        if (Convert.ToInt32(row2["SUM_C_SR"]) > 0)
-                        {
+                        //if (Convert.ToInt32(row2["SUM_C_SR"]) > 0)
+                        //{
                             if (Convert.ToDouble(row2["SUM_D_SR"]) > 0)
                             {
                                 if (Convert.ToDouble(row["ST_R_T"]) > 0)
@@ -549,7 +528,7 @@ namespace RGolemAddin.View
                                 ((Excel.Range)activeWorksheet.Cells[rowIndex + 2, j]).Font.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Green);
                                 ((Excel.Range)activeWorksheet.Cells[rowIndex + 3, j]).Font.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Green);
                             }
-                        }
+                        //}
                         rowIndex += 3;
                     }
 
@@ -602,8 +581,8 @@ namespace RGolemAddin.View
                     foreach (DataRow row2 in dt2.Rows)
                     {
                         ((Excel.Range)activeWorksheet.Cells[rowIndex + 1, j]).Value2 = Math.Round(Convert.ToDouble(row2["SUM_D_SR"]) / 60, 2);
-                        if (Convert.ToInt32(row2["SUM_C_SR"]) > 0)
-                        {
+                        //if (Convert.ToInt32(row2["SUM_C_SR"]) > 0)
+                        //{
                             if (Convert.ToDouble(row2["SUM_D_SR"]) > 0)
                             {
                                 if (Convert.ToDouble(row["ST_R_T"]) > 0)
@@ -625,7 +604,7 @@ namespace RGolemAddin.View
                                 ((Excel.Range)activeWorksheet.Cells[rowIndex + 2, j]).Font.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Green);
                                 ((Excel.Range)activeWorksheet.Cells[rowIndex + 3, j]).Font.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Green);
                             }
-                        }
+                        //}
                         rowIndex += 3;
                     }
                     connection.Close();
@@ -678,8 +657,8 @@ namespace RGolemAddin.View
                     foreach (DataRow row2 in dt2.Rows)
                     {
                         ((Excel.Range)activeWorksheet.Cells[rowIndex + 1, j]).Value2 = Math.Round(Convert.ToDouble(row2["SUM_D_SR"]) / 60, 2);
-                        if (Convert.ToInt32(row2["SUM_C_SR"]) > 0)
-                        {
+                        //if (Convert.ToInt32(row2["SUM_C_SR"]) > 0)
+                        //{
                             if (Convert.ToDouble(row2["SUM_D_SR"]) > 0)
                             {
                                 if (Convert.ToDouble(row["ST_R_T"]) > 0)
@@ -701,7 +680,7 @@ namespace RGolemAddin.View
                                 ((Excel.Range)activeWorksheet.Cells[rowIndex + 2, j]).Font.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Green);
                                 ((Excel.Range)activeWorksheet.Cells[rowIndex + 3, j]).Font.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Green);
                             }
-                        }
+                        //}
                         rowIndex += 3;
                     }
 
@@ -709,6 +688,77 @@ namespace RGolemAddin.View
                 }
                 j++;
             }
+
+            //Czas pracy operatora
+            dt.Clear();
+            using (FbConnection connection = new FbConnection(DataBaseConnection.GetConnectionString()))
+            {
+                connection.Open();
+
+                transaction = connection.BeginTransaction();
+                command.Transaction = transaction;
+                command.Connection = connection;
+
+                command.CommandText = @"select 
+                                            left(uname, position(' ',uname) ) as uname
+                                            , sv
+                                            , sum(d_time) as sum_d_time
+                                            , z
+                                        from
+                                        (                                        
+                                            select u.uname
+                                                 , r.sv
+                                                 , (r.d_time + r.d_tnone + r.d_tpp + r.d_tpnp + r.d_tp + r.d_tu + r.d_ta + r.d_tmp) as d_time
+                                                 , r.z
+                                            from raporth r left outer join user_list u on r.ido = u.ido
+                                            where r.czas >= @czasOd and r.czas < @czasDo
+                                                and r.ido > 0
+                                                and r.sv = @sv
+                                        ) t
+                                        group by uname, z, sv
+                                        order by z, sum_d_time desc";
+
+                FbDataAdapter adapter = new FbDataAdapter(command);
+                adapter.Fill(dt);
+
+                int numberOfOperatorsPerFirstShift = 2;
+                int numberOfOperatorsPerSecondShift = 2;
+                int numberOfOperatorsPerThirdShift = 2;
+
+                foreach (DataRow row in dt.Rows)
+                {
+                    int columnNo = 16;
+
+                    switch (Convert.ToInt32(row["Z"]))
+                    {
+                        case 1:
+                            columnNo = 16;
+                            numberOfOperatorsPerFirstShift += 1;
+                            rowIndex = numberOfOperatorsPerFirstShift;
+                            break;
+                        case 2:
+                            columnNo = 18;
+                            numberOfOperatorsPerSecondShift += 1;
+                            rowIndex = numberOfOperatorsPerSecondShift;
+                            break;
+                        case 3:
+                            columnNo = 20;
+                            numberOfOperatorsPerThirdShift += 1;
+                            rowIndex = numberOfOperatorsPerThirdShift;
+                            break;
+                        default:
+                            break;
+                    }
+
+                    ((Excel.Range)activeWorksheet.Cells[rowIndex, columnNo]).Value2 = row["UNAME"];
+                    ((Excel.Range)activeWorksheet.Cells[rowIndex, columnNo+1]).Value2 = Math.Round(Convert.ToDouble(row["SUM_D_TIME"]) / 60, 2);
+
+                }
+
+                connection.Close();
+            }
+
+
 
             for (int columnIndex = 1; columnIndex <= 20; columnIndex++)
             {

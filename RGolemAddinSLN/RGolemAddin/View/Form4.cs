@@ -97,6 +97,8 @@ namespace RGolemAddin.View
             activeWorksheet.get_Range("A:J").ClearContents();
 
             activeWorksheet.get_Range("N:N").ClearContents();
+            activeWorksheet.get_Range("Q:Q").ClearContents();
+            activeWorksheet.get_Range("AF:AF").ClearContents();
 
             choosenSV = Convert.ToInt32(cbxListMachine.SelectedValue);
             var machineList = new int[] { 4, 1, 2, 5, 6, 7, 8, 9 };
